@@ -1,12 +1,9 @@
 import "./App.css";
+import Body from "./components/Body";
 
 function App() {
   return (
-    <div>
-      <h1 className="text-red-500 text-4xl font-bold">
-        Hello Tailwind
-      </h1>
-    </div>
+    <Body/>
   );
 }
 
