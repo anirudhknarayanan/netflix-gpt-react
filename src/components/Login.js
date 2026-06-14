@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
 import Header from "./Header";
 import { validateData } from "../utils/validateData";
+import {createUserWithEmailAndPassword , signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const Login = () => {
   const [errorMessage, seterrorMessage] = useState(null);
@@ -11,17 +13,47 @@ const Login = () => {
   const toggleSignInForm = () => {
     setisLoginForm(!isLoginForm);
   };
-  
+
   const handleSubmit = () => {
     if (!isLoginForm && !name.current.value.trim()) {
-    seterrorMessage("Name is required");
-    return;
-  }
+      seterrorMessage("Name is required");
+      return;
+    }
     const message = validateData(email.current.value, password.current.value);
 
     seterrorMessage(message);
 
     if (message) return;
+
+    if (!isLoginForm) {
+      //signup logic
+      createUserWithEmailAndPassword(auth, email.current.value, password.current.value )
+       .then((userCredential) => { 
+        // Signed up 
+        const user = userCredential.user;
+         console.log(user)  }) 
+        .catch((error) => { const errorCode = error.code; 
+          const errorMessage = error.message; 
+          seterrorMessage(errorCode +"-"+errorMessage)  });
+
+
+  } else {
+
+    signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    console.log(user);
+    
+    
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    seterrorMessage(errorCode +"-"+errorMessage)
+  });
+
+    }
 
     console.log("Form Submitted Successfully");
   };
