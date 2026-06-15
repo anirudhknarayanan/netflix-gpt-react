@@ -1,10 +1,19 @@
 import { useRef, useState } from "react";
 import Header from "./Header";
 import { validateData } from "../utils/validateData";
-import {createUserWithEmailAndPassword , signInWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [errorMessage, seterrorMessage] = useState(null);
   const [isLoginForm, setisLoginForm] = useState(true);
   const name = useRef(null);
@@ -14,48 +23,66 @@ const Login = () => {
     setisLoginForm(!isLoginForm);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!isLoginForm && !name.current.value.trim()) {
       seterrorMessage("Name is required");
       return;
     }
+
     const message = validateData(email.current.value, password.current.value);
 
     seterrorMessage(message);
 
     if (message) return;
 
-    if (!isLoginForm) {
-      //signup logic
-      createUserWithEmailAndPassword(auth, email.current.value, password.current.value )
-       .then((userCredential) => { 
-        // Signed up 
+    try {
+      if (!isLoginForm) {
+        // Sign Up
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email.current.value,
+          password.current.value,
+        );
+
         const user = userCredential.user;
-         console.log(user)  }) 
-        .catch((error) => { const errorCode = error.code; 
-          const errorMessage = error.message; 
-          seterrorMessage(errorCode +"-"+errorMessage)  });
 
+        await updateProfile(user, {
+          displayName: name.current.value,
+          photoURL: "https://avatars.githubusercontent.com/u/122897031?v=4",
+        });
 
-  } else {
+        await auth.currentUser.reload();
 
-    signInWithEmailAndPassword(auth, email.current.value, password.current.value)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    console.log(user);
-    
-    
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    seterrorMessage(errorCode +"-"+errorMessage)
-  });
+        const currentUser = auth.currentUser;
 
+        console.log("Name:", currentUser.displayName);
+        console.log("Photo:", currentUser.photoURL);
+
+        dispatch(
+          addUser({
+            uid: currentUser.uid,
+            displayName: currentUser.displayName,
+            email: currentUser.email,
+            photoURL: currentUser.photoURL,
+          }),
+        );
+
+        navigate("/browse");
+      } else {
+        // Sign In
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email.current.value,
+          password.current.value,
+        );
+
+        console.log("Logged In User:", userCredential.user);
+
+        navigate("/browse");
+      }
+    } catch (error) {
+      seterrorMessage(error.code + " - " + error.message);
     }
-
-    console.log("Form Submitted Successfully");
   };
   return (
     <div className="relative h-screen">
