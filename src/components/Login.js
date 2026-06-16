@@ -7,13 +7,13 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
-import { useNavigate } from "react-router-dom";
+
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  
   const [errorMessage, seterrorMessage] = useState(null);
   const [isLoginForm, setisLoginForm] = useState(true);
   const name = useRef(null);
@@ -67,7 +67,7 @@ const Login = () => {
           }),
         );
 
-        navigate("/browse");
+       
       } else {
         // Sign In
         const userCredential = await signInWithEmailAndPassword(
@@ -78,7 +78,7 @@ const Login = () => {
 
         console.log("Logged In User:", userCredential.user);
 
-        navigate("/browse");
+        
       }
     } catch (error) {
       seterrorMessage(error.code + " - " + error.message);
