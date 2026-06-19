@@ -5,11 +5,17 @@ import { auth } from "../utils/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { addUser, removeUser } from "../utils/userSlice";
+import {toggleGtpSearch} from "../utils/gptSlice"
 
 const Header = () => {
+   const dispacth = useDispatch()
+
+  const handleGptToggle = ()=>{
+   dispacth(toggleGtpSearch())
+  }
   const user = useSelector((store) => store.user);
  
-  const dispacth = useDispatch()
+  
   const navigate = useNavigate();
   const handleLogout = () => {
     signOut(auth)
@@ -56,6 +62,9 @@ const Header = () => {
 
     {user && (
       <div className="flex items-center gap-4">
+          <button className="bg-teal-300 text-white px-4 py-2 rounded" onClick={handleGptToggle}>
+          Gpt Search
+        </button>
         <span className="text-white hidden md:block">
           {user.displayName}
         </span>
@@ -68,6 +77,7 @@ const Header = () => {
             "https://occ-0-8407-3646.1.nflxso.net/dnm/api/v6/hZ0gqf3c4S5fK9h6f7cGQjJ6gM8/AAAABQ.png"
           }
         />
+      
 
         <button
           onClick={handleLogout}
