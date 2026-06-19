@@ -5,8 +5,7 @@ import { useSelector } from 'react-redux'
 const SecondaryContainer = () => {
   const movies = useSelector((store) => store.movies);
  
-console.log("Now Playing:", movies.nowPlayingMovies?.[4]?.title);
-console.log("Popular:", movies.popularMovies?.[4]?.title);
+
 
   return (
     <div className="relative z-20 bg-black -mt-52 md:-mt-64 pl-6">
@@ -18,6 +17,17 @@ console.log("Popular:", movies.popularMovies?.[4]?.title);
         title="poppular movies"
         movies={movies.popularMovies}
       />
+
+      <MovieList
+        title="Top Rated"
+        movies={movies.topRatedMovies}
+      />
+
+      <MovieList
+        title="Upcoming Movies"
+        movies={movies.upcomingMovies}
+      />
+
       
     </div>
   );
