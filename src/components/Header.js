@@ -8,7 +8,7 @@ import { addUser, removeUser } from "../utils/userSlice";
 
 const Header = () => {
   const user = useSelector((store) => store.user);
- console.log("Redux User:", user);
+ 
   const dispacth = useDispatch()
   const navigate = useNavigate();
   const handleLogout = () => {

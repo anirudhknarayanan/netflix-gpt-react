@@ -11,8 +11,7 @@ const useNowPlayingMovies = ()=>{
     let data = await fetch('https://api.themoviedb.org/3/movie/now_playing?page=1', API_OPTIONS)
     let json = await data.json()
     
-console.log("TMDB Response:", json);
-console.log("Results:", json.results);
+
    dispatch(addMovies(json.results));
 
     

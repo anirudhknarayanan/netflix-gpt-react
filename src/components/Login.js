@@ -55,9 +55,7 @@ const Login = () => {
 
         const currentUser = auth.currentUser;
 
-        console.log("Name:", currentUser.displayName);
-        console.log("Photo:", currentUser.photoURL);
-
+       
         dispatch(
           addUser({
             uid: currentUser.uid,
@@ -76,7 +74,7 @@ const Login = () => {
           password.current.value,
         );
 
-        console.log("Logged In User:", userCredential.user);
+       
 
         
       }
