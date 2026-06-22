@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { addUser, removeUser } from "../utils/userSlice";
 import {toggleGtpSearch} from "../utils/gptSlice"
+import { SUPPORTED_LANGUAGES } from "../utils/constants";
+import { changeLang } from "../utils/configSlice";
 
 const Header = () => {
    const dispacth = useDispatch()
@@ -14,6 +16,7 @@ const Header = () => {
    dispacth(toggleGtpSearch())
   }
   const user = useSelector((store) => store.user);
+  const showGptSearch = useSelector((store)=>store.gpt.showGptSearch);
  
   
   const navigate = useNavigate();
@@ -51,6 +54,9 @@ const Header = () => {
 
   return () => unsubscribe();
 }, [dispacth]);
+const handleLanguageChange = (e)=>{
+  dispacth(changeLang(e.target.value))
+}
   return (
   <header className="absolute top-0 left-0 w-full z-50 flex justify-between items-center px-8 py-4 bg-gradient-to-b from-black to-transparent">
     {/* Netflix Logo */}
@@ -63,8 +69,18 @@ const Header = () => {
     {user && (
       <div className="flex items-center gap-4">
           <button className="bg-teal-300 text-white px-4 py-2 rounded" onClick={handleGptToggle}>
-          Gpt Search
+          {showGptSearch ? "Home Page" : "Gpt Search"}
         </button>
+       {showGptSearch && (
+  <select
+    className="bg-transparent text-white px-4 py-2 rounded-md border border-slate-50 outline-none cursor-pointer" onChange={handleLanguageChange}
+  >
+    {SUPPORTED_LANGUAGES.map((lang)=> <option key={lang.identifier} className="bg-black text-white" value={lang.identifier}>{lang.name}</option>)}
+   
+    
+    
+  </select>
+)}
         <span className="text-white hidden md:block">
           {user.displayName}
         </span>

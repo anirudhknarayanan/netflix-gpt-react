@@ -10,6 +10,7 @@ import { auth } from "../utils/firebase";
 
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { BG_URL } from "../utils/constants";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -86,7 +87,7 @@ const Login = () => {
     <div className="relative h-screen">
       <img
         className="absolute h-screen w-full object-cover"
-        src="https://assets.nflxext.com/ffe/siteui/vlv3/435e8bb8-7f1b-49cb-8da8-bff997124294/web/IN-en-20260511-TRIFECTA-perspective_ec39852e-0b48-4e8a-b415-dd8376cd83ce_large.jpg"
+        src={BG_URL}
         alt="background"
       />
 
